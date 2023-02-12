@@ -1,0 +1,21 @@
+{"FirstName" : "Bablu",   
+ "LastName"  : "Yadav",  
+ "Age"       :  22,
+ "DOB"       : "18/07/1999",
+ "PinCode"   :  221409,
+ "Address"   : "Kukrauthi",
+ "District"  : "Bhadohi",
+ "Country"   : "India",
+ "Education Qualification Pass Out":[
+ "High School   : 2015",  
+ "Intermediate  : 2017", 
+ "B.com         : 2021"],
+ 
+ "Education Qualification Percentage "  :[
+ "High School   : 74%",
+ "Intermediate  : 64%",
+ "B.com         : 58%"],
+"Other Information" :{
+"Computer Experience" : "1 Years"}
+  
+}

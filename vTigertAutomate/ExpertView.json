@@ -1,0 +1,57 @@
+{
+	"Staff Members": {
+		"Rahul Sir": "Head Director",
+		"Rinku Sir": "Organizer manager",
+		"Roshan Sir": "junior Manager",
+		"Mithilesh sir": "English Teacher",
+		"Awadhesh sir": "English Teacher"
+	},
+	"Alpha_Batch": [
+		"Student_id :1",
+		"Student Name: Rajesh",
+		"LastName  : Yadav",
+		"Age       :  22",
+		"DOB       : 18/07/1999",
+		"Gender    : Male",
+		"PinCode   :  221409",
+		"Address   : Kukrauthi",
+		"District  : Bhadohi",
+		"Country   : India"
+	],
+	"Beeta_Batch": [
+		"Student_id :12",
+		"Student Name: Manish",
+		"LastName  : Yadav",
+		"Age       :  26",
+		"DOB       : 18/07/1996",
+		"Gender    : Male",
+		"PinCode   :  221403",
+		"Address   : Chauri Bazar",
+		"District  : Bhadohi",
+		"Country   : India"
+	],
+	"Gama_Batch": [
+		"Student_id :19",
+		"Student Name: Manish",
+		"LastName  : Yadav",
+		"Age       :  24",
+		"DOB       : 18/07/1996",
+		"Gender    : Male",
+		"PinCode   :  221406",
+		"Address   : Parsipur",
+		"District  : Bhadohi",
+		"Country   : India"
+	],
+	"Delta_Batch": [
+		"Student_id :17",
+		"Student Name: Satish",
+		"LastName  : Yadav",
+		"Age       :  29",
+		"DOB       : 18/07/1992",
+		"Gender    : Male",
+		"PinCode   :  221405",
+		"Address   : dudwa",
+		"District  : Bhadohi",
+		"Country   : India"
+	]
+}

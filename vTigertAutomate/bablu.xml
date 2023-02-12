@@ -1,0 +1,25 @@
+<biodata>my information
+     <firstname>Bablu</firstname>
+      <lastname>Yadav</lastname>
+       <age>22</age>
+        <mobile-number>6386993420</mobile-number>
+         <gender> Male</gender> 
+           <relegion>Indian</relegion>>
+   <full-address>
+       
+        
+          
+           <pincode>224101<villagename>Mahboobpur Kukrauthi</villagename><district>Bhadohi</district><city>Uttar Pradesh</city></pincode>
+     <qualificationpassout>
+        <highschool>2015</highschool>
+         <intermediate>2017</intermediate>
+          <b.com>2021</b.com>
+       <qualificationpassoutpercentage>
+           <highschool>74</highschool>
+            <intermediate>64</intermediate>
+             <b.com>58</b.com>
+       
+       </qualificationpassoutpercentage>
+      </qualificationpassout>
+    </full-address>      
+</biodata>   
