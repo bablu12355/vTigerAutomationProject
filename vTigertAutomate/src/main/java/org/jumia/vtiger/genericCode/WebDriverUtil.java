@@ -1428,4 +1428,10 @@ public class WebDriverUtil {
 			e.printStackTrace();
 		}
 	}
+ public  void close() {
+	   driver .close();
+}
+public  void maximizeWindow() {
+	driver.manage().window().maximize();
+}
 }
