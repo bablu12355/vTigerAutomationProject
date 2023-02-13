@@ -38,7 +38,13 @@ public class validRegistration {
 //		webutil.hitUrl("chrome", "");
 
         
-        
+	       
+//			webutil.setImplicitlyWait(5);
+//			WebElement web5=webutil.getWebElementLocatorXpath("//div[@class='_ab8w  _ab94 _ab99 _ab9f _ab9m _ab9p  _abam _abb9 _abbr _abcm']//button[text()='Send login link']", "xpath");
+//	        webutil.usingWebElementclickMethod(web5, "Send login link");
+			
+//			webutil.hitUrl("chrome", "");
+
         
         
         

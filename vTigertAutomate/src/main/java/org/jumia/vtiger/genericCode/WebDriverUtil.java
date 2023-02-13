@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.apache.hc.client5.http.impl.classic.MainClientExec;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -1032,7 +1033,6 @@ public class WebDriverUtil {
 			extt.log(Status.FAIL, elementName + "Text validate Failed. actualText -" + actualText + " && expectedtext -"+ expectedText);
 
 		}
-
 	}
 
 	/**
@@ -1428,7 +1428,7 @@ public class WebDriverUtil {
 			e.printStackTrace();
 		}
 	}
- public  void close() {
+   public  void close() {
 	   driver .close();
 }
 public  void maximizeWindow() {

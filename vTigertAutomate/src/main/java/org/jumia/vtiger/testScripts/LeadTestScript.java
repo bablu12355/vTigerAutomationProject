@@ -86,7 +86,8 @@ public class LeadTestScript  {
 		gm.actionsClickMethod(we3, "Submit");
 		gm.setImplicitlyWait(5);
 		
-		gm.UsingSrcollUpDownMethod("//a[text()='Privacy Policy']", "xpath");
+		WebElement wee = gm.getWebElementLocatorXpath("//a[text()='Privacy Policy']", "xpath");
+		gm.UsingSrcollUpDownMethod(wee);
 		
 		WebElement we8 = gm.getWebElementLocatorXpath("//table[@class='small']//input[@value='Mass Edit']", "xpath");
 //         gm.VerifyBackgroundColorOfElement(we8,"Mass Edit","background-color");
