@@ -44,6 +44,7 @@ import com.google.common.io.Files;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+
 public class WebDriverUtil {
 	private  WebDriver driver; 
 	private  ExtentTest extt;
@@ -64,46 +65,24 @@ public class WebDriverUtil {
 	 * @param browserName this parameter used to launch browser which browser you want to give name
 	 * @param url this parameter used to generate url whatever you want to give url
 	 */
-	public  void hitUrl(String browserName, String url) {
+	public  void launchBrower(String browserName) {
 		if (browserName.equalsIgnoreCase("chrome")) {
 			WebDriverManager.chromedriver().setup();
-			driver = new ChromeDriver();
+			ChromeOptions chroptions=	new ChromeOptions();
+			chroptions.addArguments("--remote-allow-origins=*");
+			driver = new ChromeDriver(chroptions);
 			extt.log(Status.INFO,   MarkupHelper.createLabel(browserName + "browser launched succesfully", ExtentColor.INDIGO));
-
-			try {
-				driver.get(url);
-				extt.log(Status.INFO, MarkupHelper.createLabel(url + "navigate successfully", ExtentColor.ORANGE));
-			} catch (Exception e) {
-				extt.log(Status.INFO, MarkupHelper.createLabel(url + "navigate unsuccessfully", ExtentColor.ORANGE));
-				e.printStackTrace();
-			}
+			
 		} else if (browserName.equalsIgnoreCase("firefox")) {
 			WebDriverManager.firefoxdriver().setup();
 			driver = new FirefoxDriver();
-			extt.log(Status.INFO,
-					MarkupHelper.createLabel(browserName + "browser launched succesfully", ExtentColor.INDIGO));
-
-			try {
-				driver.get(url);
-				extt.log(Status.INFO, MarkupHelper.createLabel(url + "navigate successfully", ExtentColor.ORANGE));
-
-			} catch (Exception e) {
-				extt.log(Status.INFO, MarkupHelper.createLabel(url + "navigate unsuccessfully", ExtentColor.RED));
-				e.printStackTrace();
-			}
+			extt.log(Status.INFO,MarkupHelper.createLabel(browserName + "browser launched succesfully", ExtentColor.INDIGO));
+	
 		} else if (browserName.equalsIgnoreCase("edge")) {
 			WebDriverManager.edgedriver().setup();
 			driver = new EdgeDriver();
-			extt.log(Status.INFO,
-					MarkupHelper.createLabel(browserName + "browser launched succesfully", ExtentColor.INDIGO));
-			try {
-				driver.get(url);
-				extt.log(Status.INFO, MarkupHelper.createLabel(url + "navigate successfully", ExtentColor.ORANGE));
-
-			} catch (Exception e) {
-				extt.log(Status.INFO, MarkupHelper.createLabel(url + "navigate unsuccessfully", ExtentColor.RED));
-				e.printStackTrace();
-			}
+			extt.log(Status.INFO,MarkupHelper.createLabel(browserName + "browser launched succesfully", ExtentColor.INDIGO));
+			
 		} else {
 			extt.log(Status.FAIL, MarkupHelper.createLabel(browserName
 					+ "browser not launched, browser name is not valid, please check browser name and try again !",
@@ -111,7 +90,19 @@ public class WebDriverUtil {
 		}
 
 	}
-
+/**
+ * @Description This method is used to hit the URL
+ * @param Url this parameter is used to pass the URL 
+ */
+    public void hitUrl(String Url) {
+       try {
+    	   driver.get(Url);
+			extt.log(Status.INFO, MarkupHelper.createLabel(Url + "navigate successfully", ExtentColor.ORANGE));
+		} catch (Exception e) {
+			extt.log(Status.INFO, MarkupHelper.createLabel(Url + "navigate unsuccessfully", ExtentColor.ORANGE));
+			e.printStackTrace();
+		}
+    }
 	/**
 	 * this method is used to take the screenshot 
 	 * @param fileName this is parameter used to give the filename where you want to save your screenShot
@@ -148,8 +139,8 @@ public class WebDriverUtil {
 	 * @param testCaseName this parameter  used to name of testCase id we have to pass as string type argument 
 	
 	 */
-	public void testCaseId(ExtentReports extReport1, String testCaseName) {
-		extt = extReport1.createTest(testCaseName);
+	public void testCaseId( String testCaseName) {
+		extt = extReport.createTest(testCaseName);
 		extt.log(Status.INFO, MarkupHelper.createLabel(testCaseName + "generate successfully", ExtentColor.PINK));
 	}
 
@@ -157,23 +148,24 @@ public class WebDriverUtil {
 	 * this method is used flush all our report we can use flush end of the programing report
 	 * @param this parameter is used to call flush method with ExtentReports reference variable 
 	 */
-	public  void flushed(ExtentReports extr) {
-	extr.flush();
+	public  void flushed() {
+	extReport.flush();
 }
+private	ExtentReports extReport;
 	/**
 	 * here we used this method to generate our programing report to give the message 
 	 * @return this method return extReport which is ExtentReports class type 
 	 */
-	public ExtentReports extentReport() {
+	public void extentReport() {
 		DateFormat df = new SimpleDateFormat("mm-dd-yyyy-hh-mm-ss");
 		String timeStam = df.format(new Date());
 		ExtentSparkReporter htmlReport = new ExtentSparkReporter("ExtentReport" + timeStam + ".html");
-		ExtentReports extReport = new ExtentReports();
+		 extReport = new ExtentReports();
 		extReport.setSystemInfo("os name is --", System.getProperty("os.name"));
 		extReport.setSystemInfo("Username is --", System.getProperty("user.name"));
 		extReport.setSystemInfo("server name is --", System.getProperty("QA server"));
 		extReport.attachReporter(htmlReport);
-		return extReport;
+	
 	}
 
 	/**this method is used to generate date which is used in our report to identify different report 
@@ -282,16 +274,15 @@ public class WebDriverUtil {
 		}
 		return status;
 	}
-
-	/**@discription:this method is used to select the element option from dropdown by using selectByValueAttribute method of select class 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are webElement
+	/**
+	 *@discription:this method is used to select the element option from dropdown by using selectByValueAttribute method of select class 
+		 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give the elementName which we are working on element that time
-	 * @param valueAttributeToSelect this parameter is used to give the attribute value of any attribute type 
-	 * @return void
+	 * @param valueAttributeToSelect this parameter is used to give the attribute value of any attribute type
 	 */
 	public void selectByValueAttribute(WebElement we, String elementName, String valueAttributeToSelect) {
 		try {
-//			WebElement we = getWebElementLocatorXpath(locatorValue, locatortype);
+//			WebElement we = getWebElementLocatorXpath(locatorValue, locatorType);
 			boolean st = checkElement(we, elementName);
 			if (st == true) {
 				Select selectObj = new Select(we);
@@ -315,7 +306,8 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription:this method is used to select the element option from dropdown by using SelectByIndex method of select class  
-	 * @param we this method is used to search the element on UI by locatorType and LocatorValue which type are webElement  
+     *@param locatorValue this parameter is used to search the element on UI by locatorValue which type are webElement
+	 * @param locatorType this parameter is used to search the element on UI by locatorType which type are webElement	 
 	 * @param elementName this parameter is used to we have to give elementName which we are working on element that time 
 	 * @param indexValueToSelect this parameter is used to give the indexing which element we want to select element option from dropDown 
 	 */
@@ -343,7 +335,7 @@ public class WebDriverUtil {
 		}
 	}
 	/**@discription:this method is used to select the element from dropdown by using SelectByVisibleText method of select class
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are webElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give the elementName which we are working on element that time
 	 * @param VisibleToSelect this parameter is used to give the innertext value of any element which is present on dropdown option  
 	 */
@@ -352,7 +344,7 @@ public class WebDriverUtil {
 //			WebElement we = getWebElementLocatorXpath(locatorValue, locatorType);
 			boolean checkVisibility = checkElement(we, elementName);
 			if (checkVisibility == true) {
-				Select select = new Select(we);
+				Select select = new Select(we); 
 				select.selectByVisibleText(VisibleToSelect);
 				extt.log(Status.INFO,
 						MarkupHelper.createLabel(elementName + "is performed Successfully", ExtentColor.CYAN));
@@ -370,9 +362,9 @@ public class WebDriverUtil {
 			e.printStackTrace();
 		}
 	}
-	public void HandleDropdown(WebElement web, String type, String value) {
-//		WebElement web = getWebElementLocatorXpath(locatorValue, locatortype);
-		Select select = new Select(web);
+	public void HandleDropdown(WebElement we, String type, String value) {
+//		WebElement web = getWebElementLocatorXpath(locatorValue, locatorType);
+		Select select = new Select(we);
 		switch (type) {
 
 		case "index":
@@ -395,11 +387,12 @@ public class WebDriverUtil {
 
 	/**
 	  @discription: this method is used to get first option element which is select in dropdown 
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	*/
-	public void GetFirstSelectedOptionSelect(WebElement web) {
+	public void GetFirstSelectedOptionSelect(WebElement we) {
 		try {
-//			WebElement web = getWebElementLocatorXpath(locatotValue, locatorType);
-			Select select = new Select(web);
+//			WebElement web = getWebElementLocatorXpath(locatorValue, locatorType);
+			Select select = new Select(we);
 			WebElement getFirstOptionDropdown = select.getFirstSelectedOption();
 			String selectOption = getFirstOptionDropdown.getText();
 			extt.log(Status.INFO,
@@ -417,15 +410,15 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription:this method is used to get all options which is present in dropdown
-	 * @param web this parameter used to search the element on UI by locatorType and locatorValue which type are webElement 
-	 */
-	public void GetdOptionSelect(WebElement web) {
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
+	 *  */
+	public void GetdOptionSelect(WebElement we) {
 
 		try {
 			ArrayList<String> str = new ArrayList<String>();
-//			WebElement web = getWebElementLocatorXpath(locatotValue, locatorType);
+//			WebElement web = getWebElementLocatorXpath(locatorValue, locatorType);
 
-			Select select = new Select(web);
+			Select select = new Select(we);
 			List<WebElement> getAllOptionDropdown = select.getOptions();
 			for (int i = 0; i < getAllOptionDropdown.size(); i++) {
 				String getTestAllOptions = getAllOptionDropdown.get(i).getText();
@@ -449,19 +442,17 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription:this method is used to fetch innertext value of given element which element have innertext
-	 * @param we this parameter is used to search element on UI by locatorType and locatorValue which type are webelement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 * @return this method return String type
 	 */
 	public String getInnerTextValueWebElement(WebElement we, String elementName) {
-		String innerText = null;
+		String innerText ="";
 		try {
-//			WebElement we = getWebElementLocatorXpath(locatorValue, locatortype);
-
+//			WebElement we = getWebElementLocatorXpath(locatorValue, locatorType);
 			boolean st = checkElement(we, elementName);
 			if (st == true) {
 				innerText = we.getText();
-				System.out.println(innerText);
 				extt.log(Status.INFO, MarkupHelper.createLabel(elementName + "is performed Successfully", ExtentColor.CYAN));
 			}
 		} catch (StaleElementReferenceException e) {
@@ -479,7 +470,7 @@ public class WebDriverUtil {
 
 	/**
 	 * @discriptioin:this method is used to fetch any attribute value of any element
-	 * @param we this parameter is used to search element on UI by locatorType and locatorValue which type are webelement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 * @param getAttributeValue this parameter is used to give attribute value of any element as a string type
 	 * @return this method return String 
@@ -487,7 +478,7 @@ public class WebDriverUtil {
 	public String GetAttrinuteMethodWebElement(WebElement we, String elementName, String getAttributeValue) {
 		String takeGetAttributeValue = null;
 		try {
-//			WebElement we = getWebElementLocatorXpath(locatorValue, locatortype);
+//			WebElement we = getWebElementLocatorXpath(locatorValue, locatorType);
 			boolean st = checkElement(we, elementName);
 			if (st == true) {
 				takeGetAttributeValue = we.getAttribute(getAttributeValue);
@@ -513,16 +504,16 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to mouseOver on any element
-	 * @param web this parameter is used to search element on UI by locatorType and locatorValue which type are webelement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
-	public void actionsMouseOver(WebElement web, String elementName) {
+	public void actionsMouseOver(WebElement we, String elementName) {
 		try {
 //			WebElement web = getWebElementLocatorXpath(locatorValue, locatorType);
-			boolean checkElement = checkElement(web, elementName);
+			boolean checkElement = checkElement(we, elementName);
 			if (checkElement == true) {
 				Actions action = new Actions(driver);
-				action.moveToElement(web).build().perform();
+				action.moveToElement(we).build().perform();
 				extt.log(Status.INFO,MarkupHelper.createLabel(elementName + "is performed successfully", ExtentColor.ORANGE));
 
 			}
@@ -542,16 +533,18 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription:this method is used to drag the element one place to drop another place
-	 * @param we this parameter is used to search element on UI locatorValue which type are webelement
-	 * @param we1 this parameter is used to search element on UI locatorValue which type are webelement
+	 * @param we1 this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
+	 * @param we2 this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
-	public void dragAndDropActionClass(WebElement we, WebElement we1, String elementName) {
+	public void dragAndDropActionClass(WebElement we1, WebElement we2, String elementName) {
 		try {
-		boolean checkElement = checkElement(we, elementName);
+//		WebElement we=getWebElementLocatorXpath(locatorValue1, locatorType1);
+//		WebElement we1=getWebElementLocatorXpath(locatorValue1, locatorType1);
+		boolean checkElement = checkElement(we1, elementName);
 		if (checkElement == true) {
 			Actions action = new Actions(driver);
-			action.dragAndDrop(we, we1).build().perform();
+			action.dragAndDrop(we1, we2).build().perform();
 		extt.log(Status.INFO,MarkupHelper.createLabel(elementName+ "DragAndDrop Action Performed Successfully", ExtentColor.BLUE));
 		}
 	}catch(NoSuchElementException e) {
@@ -568,39 +561,63 @@ public class WebDriverUtil {
 	}
 	/**
 	 * @discription:this method is used to right click on element 
-	 * @param we this parameter is used to search element on UI locatorValue which type are webelement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
 	public  void actionsClassRightClick(WebElement we,String elementName) {
-		
-		try{boolean checkElement=checkElement(we, elementName);
+		try{
+//			WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
+			boolean checkElement=checkElement(we, elementName);
 	   if(checkElement==true) {
 		   Actions action=  new Actions(driver);
-	  action.contextClick().build().perform();
+	  action.contextClick(we).build().perform();
+		extt.log(Status.INFO,MarkupHelper.createLabel(elementName+ "Right Click Action Performed Successfully", ExtentColor.BLUE));
+
 	   }
 		}catch(NoSuchElementException e) {
-			extt.log(Status.INFO,MarkupHelper.createLabel(elementName+ "double click action performed successfully ", ExtentColor.BLUE));
+			extt.log(Status.INFO,MarkupHelper.createLabel(elementName+ "Right click action performed successfully ", ExtentColor.BLUE));
 			SnapShot("ScreenShot From DragAndDrop");
 		    e.printStackTrace();	
 		}
 		catch(Exception e) {
-			extt.log(Status.INFO,MarkupHelper.createLabel(elementName+ "double click action performed Un successfully ", ExtentColor.BLUE));
+			extt.log(Status.INFO,MarkupHelper.createLabel(elementName+ "Right click action performed Unsuccessfully ", ExtentColor.BLUE));
 			SnapShot("ScreenShot From DragAndDrop");
 		    e.printStackTrace();	
 		}
 	}
+	public  void actionsClassDoubleClick(WebElement we,String elementName) {
+		try{
+//			WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
+			boolean checkElement=checkElement(we, elementName);
+	   if(checkElement==true) {
+		   Actions action=  new Actions(driver);
+	  action.doubleClick(we).build().perform();
+		extt.log(Status.INFO,MarkupHelper.createLabel(elementName+ "double click action   performed successfully ", ExtentColor.BLUE));
+
+	   }
+		}catch(NoSuchElementException e) {
+			extt.log(Status.INFO,MarkupHelper.createLabel(elementName+ "double click action performed Unsuccessfully ", ExtentColor.BLUE));
+			SnapShot("ScreenShot From DragAndDrop");
+		    e.printStackTrace();	
+		}
+		catch(Exception e) {
+			extt.log(Status.INFO,MarkupHelper.createLabel(elementName+ "double click action performed Unsuccessfully ", ExtentColor.BLUE));
+			SnapShot("ScreenShot From DragAndDrop");
+		    e.printStackTrace();	
+		}	
+	}
 	/**
 	 * @discription:this method is used to click on element by using actionsClickMethod
-	 * @param this parameter is used to search element on UI locatorValue which type are webelement
-	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
+	 * @param elementName this  parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
-	public void actionsClickMethod(WebElement web, String elementName) {
+	public void actionsClickMethod(WebElement we, String elementName) {
 		try {
 //			WebElement web = getWebElementLocatorXpath(locatorValue, locatorType);
-			boolean checkElement = checkElement(web, elementName);
+			boolean checkElement = checkElement(we, elementName);
 			if (checkElement == true) {
 				Actions action = new Actions(driver);
-				action.click(web).build().perform();
+				action.click(we).build().perform();
 				extt.log(Status.INFO,
 						MarkupHelper.createLabel(elementName + " click performed successfully ", ExtentColor.ORANGE));
 			}
@@ -620,16 +637,17 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription:this method is used to send the value in input box by using actionsSendkeysMethod
-	 * @param this parameter is used to search element on UI locatorValue which type are webelement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param inputValue this parameter is used to give the value to input box
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
 	public void actionsSendkeysMethod(WebElement we, String inputValue, String elementName)  {
 		try {
-//			WebElement weFind = getWebElementLocatorXpath(loactorValue, locatorType);
+//			WebElement weFind = getWebElementLocatorXpath(locatorValue, locatorType);
 			boolean checkElement = checkElement(we, elementName);
 			if (checkElement == true) {
 				Actions action = new Actions(driver);
+				we.clear();
 				action.sendKeys(we, inputValue);
 				extt.log(Status.INFO,
 						MarkupHelper.createLabel(elementName + " click performed successfully on ", ExtentColor.GREEN));
@@ -650,7 +668,7 @@ public class WebDriverUtil {
 	}
 	/**
 	 * @discription:this metgod is used to send the value in input box by using WebElementSendKeysMethod 
-	 * @param we this parameter is used to search element on UI locatorValue which type are webelement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param inputValue this parameter is used to give the value to input box
 	 * @param elementName  this parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
@@ -659,6 +677,7 @@ public class WebDriverUtil {
 //			WebElement weFind = getWebElementLocatorXpath(locatorValue, locatorType);
 			boolean bl = checkElement(we, elementName);
 			if (bl == true) {
+//				weFind.clear();
 				we.sendKeys(inputValue);
 				extt.log(Status.INFO, MarkupHelper.createLabel(inputValue + " input in input box ", ExtentColor.BLUE));
 			}
@@ -676,13 +695,13 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription this method is used to click on element by using WebElementclickMethod( 
-	 * @param we this parameter is used to search element on UI locatorValue which type are webelement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
 	public void usingWebElementclickMethod(WebElement we, String elementName) {
 
 		try {
-//			WebElement we = getWebElementLocatorXpath(locatorValue, locatorType);
+//		.	WebElement we = getWebElementLocatorXpath(locatorValue, locatorType);
 			boolean st = checkElement(we, elementName);
 			if (st == true) {
 				we.click();
@@ -695,7 +714,7 @@ public class WebDriverUtil {
 
 		} catch (Exception e) {
 			extt.log(Status.INFO,
-					MarkupHelper.createLabel(elementName + " click performed unsuccessfully on ", ExtentColor.GREEN));
+					MarkupHelper.createLabel(elementName + "  performed unsuccessfully on ", ExtentColor.GREEN));
 			SnapShot(elementName);
 			e.printStackTrace();
 		}
@@ -705,7 +724,7 @@ public class WebDriverUtil {
 	 * @discription:this method is used to get the title of currnet webPage by using driver.getTitle();
 	 * @param title this parameter is used to give the title of any webPage 
 	 */
-	public void getTitleOFpage(String title) {
+	public void validateGetTitleOFpage(String title) {
 		if (driver.getTitle().contains(title)) {
 			extt.log(Status.PASS,
 					MarkupHelper.createLabel(title + " verify succesfully title of the page ", ExtentColor.BROWN));
@@ -727,12 +746,11 @@ public class WebDriverUtil {
 	}
        	/**
      * @dicription: this method is used to handle the  frame by indexing using this methoddriver.switchTo().frame(frameIndex);
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement 
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param frameIndex this parameter is used to give the indexing number by which we can handle frame
 	 */
-	public void FrameIndexValue(WebElement we, int frameIndex) {
+	public void FrameIndexValue( int frameIndex) {
 		try {
-//			getWebElementLocatorXpath(locator, locatorType);
 			driver.switchTo().frame(frameIndex);
 		} catch (NoSuchElementException e) {
 			e.printStackTrace();
@@ -754,12 +772,10 @@ public class WebDriverUtil {
 	/**
 	 * @discription: this method is used to handle the frame NameOrId attribute 
 	 * using this method driver.switchTo().frame(frameNameOrIdAtrribute);
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement 
 	 * @param frameNameOrIdAtrribute this parameter is used to give name or id attribute value as a String format
 	 */
-	public void handleFrameNameOrIdAtrribute(WebElement we, String frameNameOrIdAtrribute) {
+	public void handleFrameNameOrIdAtrribute( String frameNameOrIdAtrribute) {
 		try {
-//			getWebElementLocatorXpath(locator, locatorType);
 			driver.switchTo().frame(frameNameOrIdAtrribute);
 		} catch (NoSuchElementException e) {
 			e.printStackTrace();
@@ -775,9 +791,8 @@ public class WebDriverUtil {
 	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement 
 	 * @param frameWebElementMethod this method is used to give the reference variable of WebElement as a string type
 	 */
-	public void handleFrameWebElementMethod(WebElement we, String frameWebElementMethod) {
+	public void handleFrameWebElementMethod(String frameWebElementMethod) {
 		try {
-//			getWebElementLocatorXpath(locator, locatorType);
 			driver.switchTo().frame(frameWebElementMethod);
 		} catch (NoSuchElementException e) {
 			e.printStackTrace();
@@ -789,15 +804,14 @@ public class WebDriverUtil {
 	}
 
 	 /**
-	 * @discription:this method is used to switch from the frame to main page 
+	 * @discription:this method is used to switch from the Iframe to main page 
 	 */
 	public  void defaultContent() {
 		driver.switchTo().defaultContent();
 	}
 	
-	 public void handleFrame(WebElement we, String type, String Value) {
+	 public void handleFrame(String type, String Value) {
 		try {
-//			getWebElementLocatorXpath(locator, locatorType);
 			switch (type) {
 			case "frameIndex":
 				driver.switchTo().frame(Integer.parseInt(Value));
@@ -855,29 +869,28 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to if you want to verity message in popup 
-	 * @param we this parameter is used to search the element on UI by locatorType And locatorType which type are WebElement 
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 */
-	public void HandleAlertGetText(WebElement we) {
+	public void HandleAlertGetText() {
 		try {
-//			getWebElementLocatorXpath(locatorvalue, Locatortype);
 			driver.switchTo().alert().getText();
 		} catch (NoSuchElementException e) {
 			e.printStackTrace();
 
 		} catch (Exception e) {
-			SnapShot("HandleAlertGetText");
+			SnapShot("HandleAlertText");
 			e.printStackTrace();
 		}
 	}
 
 	/**
 	 * @discription: this method is used to send any value in popup 
-	 * @param we this parameter is used to search the element on UI by locatorType And locatorType which type are WebElement 
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param inputvalue this parameter is used to send any value in popup as a string type
 	 */
 	public void HandleAlertSendKeys(WebElement we, String inputvalue) {
 		try {
-//			getWebElementLocatorXpath(locatorvalue, Locatortype);
+//			WebElement we=getWebElementLocatorXpath( locatorValue,  locatorType);
 			driver.switchTo().alert().sendKeys(inputvalue);
 
 		} catch (NoSuchElementException e) {
@@ -892,11 +905,12 @@ public class WebDriverUtil {
 	/**
 	 * @discription: this method is used to  it will wait till the element is clickable or not
 	 * only for that element which element you want 
-	 * @param we this parameter is used to search the element on UI by locatorType And locatorType which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param atimeOutInSecond this parameter is used to give the time session 
 	 */
 	public void waitForElementEnabled(WebElement we, int atimeOutInSecond) {
 		try {
+//			WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 			WebDriverWait exWait = new WebDriverWait(driver, Duration.ofSeconds(atimeOutInSecond));
 			exWait.until(ExpectedConditions.elementToBeClickable(we));
 			extt.log(Status.INFO, "elementToBeClickable performed successfully");
@@ -984,28 +998,31 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to click on element using javaScriptClick 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement 
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 */
-	public void usingJavaScriptClick(WebElement we) {
+	public void usingJavaScriptClick(String locatorValue, String locatorType) {
+		WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("argumets[0].click();",we);
 	}
 
 	/**
 	 * @discription: this method is used to send any value in input box using JavaScriptSendKeys
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param inputValue this parameter is used to give value 
 	 */
 	public void usingJavaScriptSendKeys(WebElement we, String inputValue) {
+//		WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("argumets[0].value='" + inputValue + "'",we);
 	}
 
 	/** 
 	 * @discription: this method is used to  scroll up and down which element you want to  scroll
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 */
-	public void UsingSrcollUpDownMethod(WebElement we) {
+	public void UsingSrcollUpDownMethod(String locatorValue, String locatorType) {
+		WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("arguments[0].scrollIntoView();",we);
 
@@ -1021,13 +1038,13 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to verify the actualText and  expected text to given element 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param expectedText this parameter is used to verify the given element to actual element match or not 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time  
 	 */
 	public void validateText(WebElement we, String expectedText, String elementName) {
-		String actualText = getInnerTextValueWebElement(we, elementName);
-		if (actualText.equals(expectedText)) {
+		String actualText =getInnerTextValueWebElement(we, elementName);
+		if (actualText.equalsIgnoreCase(expectedText)) {
 			extt.log(Status.PASS, elementName + "Text validate Pass. actualText -" + actualText + " && expectedtext -"+ expectedText);
 		} else {
 			extt.log(Status.FAIL, elementName + "Text validate Failed. actualText -" + actualText + " && expectedtext -"+ expectedText);
@@ -1037,7 +1054,7 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription:this method is used to verify the actualText and ExpectedText to given attribute value
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 * @param attributeValue this parameter is used to verify the given any attribute value  to match actual value
 	 * @param expectedAttributrValue
@@ -1056,10 +1073,11 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this parameter is used to verify the element is enabled or not 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
 	public void validateElementEnabled(WebElement we, String elementName) {
+//		WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 		boolean flag = we.isEnabled();
 		if (flag == true) {
 			extt.log(Status.PASS, elementName + " is enabled");
@@ -1072,10 +1090,11 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to verify element disabled or not  
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
 	public void validateElementDisabled(WebElement we, String elementName) {
+//		WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 		boolean flag = we.isEnabled();
 		if (flag == false) {
 			extt.log(Status.PASS, elementName + " is Disabled");
@@ -1087,10 +1106,11 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to element visible or not on UI
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time 
 	 */
 	public void validateElementVisible(WebElement we, String elementName) {
+//		WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 		boolean flag = we.isDisplayed();
 		if (flag == true) {
 			extt.log(Status.PASS, elementName + " is visible");
@@ -1102,10 +1122,11 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method used to element invisible or not on UI
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on Element that time
 	 */
 	public void validateElementInVisible(WebElement we, String elementName) {
+//		WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 		boolean flag = we.isDisplayed();
 		if (flag == false) {
 			extt.log(Status.PASS, elementName + " is Invisible");
@@ -1117,10 +1138,11 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to check and verify weather check box is selected or not  
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param checkBox this parameter is used to we have to give checkBoxName Which are we working 
 	 */
 	public void validateCheckBoxSelected(WebElement we, String checkBox) {
+//		WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 		boolean flag = we.isSelected();
 		if (flag == true) {
 			extt.log(Status.PASS, MarkupHelper.createLabel(checkBox + " is Selected", ExtentColor.INDIGO));
@@ -1131,10 +1153,11 @@ public class WebDriverUtil {
 	}
 	/**
 	 * @discription: this method is used to check and verify weather check box is Unselected or not  
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param checkBox this parameter is used to we have to give checkBoxName Which are we working 
 	 */
 	public void validateCheckBoxUnSelected(WebElement we, String checkBox) {
+//		WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 		boolean flag = we.isSelected();
 		if (flag == false) {
 			extt.log(Status.PASS, MarkupHelper.createLabel(checkBox + " is UnSelected", ExtentColor.INDIGO));
@@ -1160,14 +1183,15 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to check the size of element 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give ElementName Which are we working on that time
 	 * @return this method return Dimention class Object
 	 */
 	public Dimension sizeOfAnyElement(WebElement we, String elementName) {
 		Dimension sizeOfElement = null;
 		try {
-			Boolean chechElement = checkElement(we, elementName);
+//			WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
+			boolean chechElement = checkElement(we, elementName);
 			if (chechElement == true) {
 				sizeOfElement = we.getSize();
 				int height = sizeOfElement.getHeight();
@@ -1191,8 +1215,9 @@ public class WebDriverUtil {
 	}
 
 	/**
+
 	 * @discription:this method is used to validate the size of element 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementname Which are we working on that time
 	 * @param width this parameter is used to give the width of the element 
 	 * @param height this parameter is used to give the height of the element
@@ -1218,43 +1243,15 @@ public class WebDriverUtil {
 	}
 
 	/**
-	 * @discription:this method is used to verify the color of the element 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
-	 * @param elementName this parameter is used to we have to give elementName Which are we working on that time
-	 * @param CheckElementColor this patameter is used to give color as a String type
-	 * @return this method returns String 
-	 */
-	public String verifyElementOfColor(WebElement we, String elementName, String CheckElementColor) {
-		String colorOf = null;
-		try {
-			boolean check = checkElement(we, elementName);
-			if (check == true) {
-				colorOf = we.getCssValue(CheckElementColor);
-				String actualColorOfElement = Color.fromString(colorOf).asHex();
-				extt.log(Status.INFO, MarkupHelper.createLabel(elementName + " color of element is " + actualColorOfElement, ExtentColor.GREEN));
-			}
-		} catch (NoSuchElementException e) {
-			extt.log(Status.INFO,MarkupHelper.createLabel(elementName + " color of element isn't found ", ExtentColor.GREEN));
-
-			SnapShot(elementName);
-			e.printStackTrace();
-		} catch (Exception e) {
-			extt.log(Status.INFO,MarkupHelper.createLabel(elementName + " color of element isn't found ", ExtentColor.GREEN));
-			SnapShot(elementName);
-			e.printStackTrace();
-		}
-		return colorOf;
-	}
-
-	/**
 	 * @discription:this method is used to verify location of the element  
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on that time
 	 * @return this method returns point Class Object
 	 */
 	public Point VerifylocationOfElement(WebElement we, String elementName) {
 		Point elementLocation = null;
 		try {
+//			WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 			boolean chekElement = checkElement(we, elementName);
 			if (chekElement == true) {
 				elementLocation = we.getLocation();
@@ -1279,7 +1276,7 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to validate location of the element 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on that time
 	 * @param x this parameter is used to give x location of the element 
 	 * @param y this parameter is used to give y location of the element 
@@ -1296,19 +1293,49 @@ public class WebDriverUtil {
 
 		}
 	}
+	/**
+	 * @discription:this method is used to verify the color of the element 
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
+	 * @param elementName this parameter is used to we have to give elementName Which are we working on that time
+	 * @param ColorName this patameter is used to give color as a String type
+	 * @return this method returns String 
+	 */
+	public String verifyElementOfColor(WebElement we, String elementName, String ColorName) {
+		String actualColorOfElement = null; ;
+		try {
+//			WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
+			boolean check = checkElement(we, elementName);
+			if (check == true) {
+				String colorOf = we.getCssValue(ColorName);
+				actualColorOfElement = Color.fromString(colorOf).asHex();
+				System.out.println("jjj"+actualColorOfElement);
+				extt.log(Status.INFO, MarkupHelper.createLabel(elementName + " color of element is " + actualColorOfElement, ExtentColor.GREEN));
+			}
+		} catch (NoSuchElementException e) {
+			extt.log(Status.INFO,MarkupHelper.createLabel(elementName + " color of element isn't found ", ExtentColor.GREEN));
 
+			SnapShot(elementName);
+			e.printStackTrace();
+		} catch (Exception e) {
+			extt.log(Status.INFO,MarkupHelper.createLabel(elementName + " color of element isn't found ", ExtentColor.GREEN));
+			SnapShot(elementName);
+			e.printStackTrace();
+		}
+		return actualColorOfElement;
+	}
 	/**
 	 * @discription: this method is used to validate color of the element 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on that time
 	 * @param checkElementColor this parameter is used to we have to give color as a String 
 	 * @param expectedColor
 	 */
-	public void ValidatElementOfColor(WebElement we, String elementName, String checkElementColor,
+	public void ValidatElementOfColor(WebElement we, String elementName, String ColorName,
 			String expectedColor) {
-		String actualColor = verifyElementOfColor(we, elementName, checkElementColor);
-		System.out.println("actualColor" + actualColor);
-		if (actualColor.equals(expectedColor)) {
+		String actualColor = verifyElementOfColor(we, elementName, ColorName);
+		System.out.println("actualColor..." + actualColor);
+		System.out.println("expectedColor...."+expectedColor);
+		if (actualColor.equalsIgnoreCase(expectedColor)) {
 			extt.log(Status.PASS,MarkupHelper.createLabel(elementName + " Color Of Element Validate pass. actualColor--"+ actualColor + "&&" + "ExpectedColor--" + expectedColor, ExtentColor.PURPLE));
 		} else {
 			extt.log(Status.FAIL,MarkupHelper.createLabel(elementName + " Color Of Element Validate failed. actualColor--"+ actualColor + "&&" + "ExpectedColor--" + expectedColor, ExtentColor.PURPLE));
@@ -1319,18 +1346,21 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this method is used to verify background color of the element 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on that time
-	 * @param backgroundColor this parameter is used towe have to give backgorund as a String type 
+	 * @param backgroundColor this parameter is used to we have to give backgorund as a String type 
 	 * @return
 	 */
 	public String VerifyBackgroundColorOfElement(WebElement we, String elementName, String backgroundColor) {
 		String backgroungOf = null;
 		try {
-			boolean checkElementVisisblity = checkElement(we, elementName);
-			if (checkElementVisisblity == true) {
+//			WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
+			boolean checkElementVisibility = checkElement(we, elementName);
+			if (checkElementVisibility == true) {
 				backgroungOf = we.getCssValue(backgroundColor);
 				String actualBackgroundColorOf = Color.fromString(backgroungOf).asHex();
+				System.out.println("actualBackgroundColorOf...."+actualBackgroundColorOf);
+				
 				extt.log(Status.INFO, MarkupHelper.createLabel(elementName + " color of element is " + actualBackgroundColorOf, ExtentColor.GREEN));
 
 			}
@@ -1350,7 +1380,7 @@ public class WebDriverUtil {
 
 	/**
 	 * @discription: this parameter is used to validate backgound color of the element 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on that time
 	 * @param backgroundColor this parameter is used towe have to give backgorund as a String type 
 	 * @param  
@@ -1361,10 +1391,10 @@ public class WebDriverUtil {
 		String actualBackground = VerifyBackgroundColorOfElement(we, elementName, backgroundColor);
 		if (actualBackground.equals(expextedBackgoundColor)) {
 			extt.log(Status.PASS,
-					MarkupHelper.createLabel(elementName + " Color Of Element Validate pass. actualColor--"+ actualBackground + "&&" + "ExpectedColor--" + expextedBackgoundColor,ExtentColor.PURPLE));
+					MarkupHelper.createLabel(elementName + "Backgound Color Of Element Validate pass. actualColor--"+ actualBackground + "&&" + "ExpectedColor--" + expextedBackgoundColor,ExtentColor.PURPLE));
 
 		} else {
-			extt.log(Status.PASS,MarkupHelper.createLabel(elementName + " Color Of Element Validate pass. actualColor--"+ actualBackground + "&&" + "ExpectedColor--" + expextedBackgoundColor,ExtentColor.PURPLE));
+			extt.log(Status.PASS,MarkupHelper.createLabel(elementName + "Backgound Color Of Element Validate pass. actualColor--"+ actualBackground + "&&" + "ExpectedColor--" + expextedBackgoundColor,ExtentColor.PURPLE));
 
 		}
 	}
@@ -1405,11 +1435,12 @@ public class WebDriverUtil {
 
 	/**
 	 * this parameter is used to whether the select element supports multiple selection options at the same time or not 
-	 * @param we this parameter is used to search the element on UI by locatorType and locatorValue which type are WebElement
+	 * @param we this parameter is used to search the element by locatorType and locatorValue on UI  which type are webElement 
 	 * @param elementName this parameter is used to we have to give elementName Which are we working on that time
 	 */
 	public void validateMultipleSelected(WebElement we, String elementName) {
 		try {
+//			WebElement we=getWebElementLocatorXpath(locatorValue, locatorType);
 			boolean checkElement = checkElement(we, elementName);
 			if (checkElement == true) {
 				Select select = new Select(we);
@@ -1428,10 +1459,26 @@ public class WebDriverUtil {
 			e.printStackTrace();
 		}
 	}
-   public  void close() {
+ 
+	
+	/**
+	 * @discription: this method is used to close current window
+	 */
+	public  void close() {
 	   driver .close();
 }
+/**
+ * @discription: this method is used to maximize the current window
+ */
 public  void maximizeWindow() {
 	driver.manage().window().maximize();
+}
+/**
+ * @return
+ */
+public  String getTitlePage() {
+	return	driver.getTitle();
+   
+
 }
 }
