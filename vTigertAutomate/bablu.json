@@ -1,21 +1,31 @@
-{"FirstName" : "Bablu",   
- "LastName"  : "Yadav",  
- "Age"       :  22,
- "DOB"       : "18/07/1999",
- "PinCode"   :  221409,
- "Address"   : "Kukrauthi",
- "District"  : "Bhadohi",
- "Country"   : "India",
- "Education Qualification Pass Out":[
- "High School   : 2015",  
- "Intermediate  : 2017", 
- "B.com         : 2021"],
- 
- "Education Qualification Percentage "  :[
- "High School   : 74%",
- "Intermediate  : 64%",
- "B.com         : 58%"],
-"Other Information" :{
-"Computer Experience" : "1 Years"}
-  
+{ 
+  "student": [
+   {
+     "id": 1,
+     "name"      : "Bablu",
+     "location" : "Bhadohi",
+     "phone"    : 6386993420,
+     "course"    :[
+     "java", "selenium"
+   ]
+},
+   {
+     "id": 2,
+     "name"      : "Ramesh",
+     "location" : "Varanasi",
+     "phone"    : 8303545399,
+     "course"    :[
+     "Manual Testing", "Automation Testing"
+]
+},
+  {
+     "id": 3,
+     "name"      : "Ganesh",
+     "location" : "Mirzapur",
+     "phone"    : 7603545399,
+     "course"    :[
+     "GUl Testing", "UsabilityTesting"
+]
+}
+]
 }
