@@ -1,0 +1,12 @@
+Sr.No,API Name,End Point,API HTTP  Request Method ,Summary,Test Data,Expected,Actual,Status Code
+TC001,get access token,/oauth2/token,POST,Verify that user is able to generate the access token,Cilent_ID-,user should be able to generate access token ,worlking as per the expectation,PASS
+TC001,,https://www.google.com,GET,Verify that when user use  the invalid HTTP request method,,User should get error message with status code 405 and message should be like method not allowed,User is getting status code 400 invalid ,FAIL
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Suite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" name="chrome run(failed)">
+    <parameter name="browser" value="chrome"/>
+    <parameter name="url" value="http://localhost:8888"/>
+    <classes>
+      <class name="org.jumia.vtiger.testScripts.TestScript">
+        <methods>
+          <include name="generateExtentReport"/>
+          <include name="launchBrowser"/>
+          <include name="logout"/>
+          <include name="closeTheBrowser"/>
+          <include name="startFromLogin"/>
+          <include name="flushed"/>
+          <include name="verifyCreateInvoice"/>
+        </methods>
+      </class> <!-- org.jumia.vtiger.testScripts.TestScript -->
+    </classes>
+  </test> <!-- chrome run(failed) -->
+  <test thread-count="5" name="firefox run(failed)">
+    <parameter name="browser" value="firefox"/>
+    <parameter name="url" value="http://localhost:8888"/>
+    <classes>
+      <class name="org.jumia.vtiger.testScripts.TestScript">
+        <methods>
+          <include name="generateExtentReport"/>
+          <include name="launchBrowser"/>
+          <include name="logout"/>
+          <include name="closeTheBrowser"/>
+          <include name="startFromLogin"/>
+          <include name="verifyCreateInvoice" invocation-numbers="0"/>
+          <include name="flushed"/>
+        </methods>
+      </class> <!-- org.jumia.vtiger.testScripts.TestScript -->
+    </classes>
+  </test> <!-- firefox run(failed) -->
+</suite> <!-- Failed suite [Suite] -->
